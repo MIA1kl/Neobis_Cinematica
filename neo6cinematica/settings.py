@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'neo6cinematica.wsgi.application'
 DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': "cinematicadb",
+            'NAME': "cinemadatabase",
             'USER': "postgres",
             'PASSWORD': "zaqwe112",
             'HOST': '127.0.0.1',
