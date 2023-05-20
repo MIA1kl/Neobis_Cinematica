@@ -45,12 +45,6 @@ class RoomFormat(models.Model):
     def __str__(self):
         return self.name
 
-class MovieFormat(models.Model):
-    name = models.CharField(max_length=255)
-    price = models.IntegerField(blank=True, null=True)
-
-    def __str__(self):
-        return self.name
 
 class Seat(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='seats')

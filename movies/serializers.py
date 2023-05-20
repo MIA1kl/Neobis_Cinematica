@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Movie, Cinema, Showtime, Genre, Room,RoomFormat,MovieFormat,Seat
-from tickets.seriaizers import TicketSerializer
+from .models import Movie, Cinema, Showtime, Genre, Room,RoomFormat, Seat
+from tickets.serializers import TicketSerializer
 
 
 
@@ -37,10 +37,6 @@ class RoomSerializer(serializers.ModelSerializer):
         model = Room
         fields = '__all__'
 
-class MovieFormatSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MovieFormat
-        fields = "__all__"
 
 class RoomFormatSerializer(serializers.ModelSerializer):
     class Meta:

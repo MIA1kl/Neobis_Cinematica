@@ -1,6 +1,4 @@
 from django.db import models
-
-
 from movies.models import (
     Movie,
     Cinema,
@@ -18,6 +16,13 @@ class TicketType(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Booking(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE)
+    seats = models.ManyToManyField(Seat)
+    payment_method = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class Ticket(models.Model):
     showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, related_name='tickets')
@@ -26,6 +31,7 @@ class Ticket(models.Model):
     price = models.IntegerField(blank=True, null=True)
     customer = models.ForeignKey('User', on_delete=models.CASCADE, related_name='tickets')
     purchase_date = models.DateTimeField(auto_now_add=True)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     
     methods = [
         (1, 'Visa-card'),
@@ -40,13 +46,12 @@ class Ticket(models.Model):
                 self.ticket_type.name == "student" and
                 self.seats.rooms.format.name == 'small' or
                 self.seats.rooms.format.name == 'middle' or
-                self.seats.rooms.format.name == 'big' or
-                self.seats.rooms.format.name == 'Imax'
+                self.seats.rooms.format.name == 'big' 
         ):
             self.price = self.ticket_type.price + \
                          self.seats.rooms.format.price
         super().save(*args, **kwargs)
-
+        
 
 class PurchaseHistory(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='purchase_history')

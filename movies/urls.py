@@ -6,8 +6,6 @@ from .views import (
     DetailGenre,
     ListMovie,
     DetailMovie,
-    ListMovieFormat,
-    DetailMovieFormat,
     ListRoom,
     DetailRoom,
     ListRoomsFormat,
@@ -35,9 +33,6 @@ urlpatterns = [
     
     path('rooms-format/', ListRoomsFormat.as_view({'get': 'list', 'post': 'create'}), name='room-format-list'),
     path('rooms-format/<int:pk>/', DetailRoomsFormat.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='room-format-detail'),
-    
-    path('movies-format/', ListMovieFormat.as_view({'get': 'list', 'post': 'create'}), name='movie-format-list'),
-    path('movies-format/<int:pk>/', DetailMovieFormat.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='movie-format-detail'),
     
     path('seats/', ListSeat.as_view({'get': 'list', 'post': 'create'}), name='seat-list'),
     path('seats/<int:pk>/', DetailSeat.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='seat-detail'),
