@@ -1,34 +1,91 @@
-from rest_framework import viewsets, decorators
-from .models import Movie, Cinema
-from .serializers import MovieSerializer, CinemaSerializer
+from rest_framework import viewsets, generics, permissions
+from .models import Movie, Cinema, Genre, Room, RoomFormat, MovieFormat, Seat, Showtime
+from .serializers import MovieSerializer, CinemaSerializer, GenreSerializer, RoomSerializer, RoomFormatSerializer, MovieFormatSerializer, SeatSerializer, ShowtimeSerializer
 from django.utils import timezone
 from users.permissions import IsAdminOrReadOnly
 
 
 
-# @decorators.action(detail=False, methods=['post'])
-# def hide_movies(self, request):
-#     movie_ids = request.data.get('movie_ids', [])
-#     movies = Movie.objects.filter(pk__in=movie_ids)
-#     movies.update(is_active=False)
-#     return Response({'message': 'Movies hidden successfully.'})
-
-class MovieViewSet(viewsets.ModelViewSet):
+class ListMovie(generics.ListCreateAPIView):
     queryset = Movie.objects.filter(is_active=True, release_date__gte=timezone.now().date())
     serializer_class = MovieSerializer
     permission_classes = [IsAdminOrReadOnly ]
-    
-    # def get_queryset(self):
-    #     # Include inactive movies for administrators
-    #     if self.request.user.is_staff or self.request.users.is_admin:
-    #         return Movie.objects.all()
-    #     return super().get_queryset()
-    
-    # hide_movies = hide_movies
 
+class DetailMovie(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Movie.objects.filter(is_active=True, release_date__gte=timezone.now().date())
+    serializer_class = MovieSerializer
+    permission_classes = [IsAdminOrReadOnly ]
 
-
-
-class CinemaViewSet(viewsets.ModelViewSet):
+class ListCinema(generics.ListCreateAPIView):
     queryset = Cinema.objects.all()
     serializer_class = CinemaSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class DetailCinema(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Cinema.objects.all()
+    serializer_class = CinemaSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class ListRoom(generics.ListCreateAPIView):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class DetailRoom(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class ListSeat(generics.ListCreateAPIView):
+    queryset = Seat.objects.all()
+    serializer_class = SeatSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class DetailSeat(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Seat.objects.all()
+    serializer_class = SeatSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+class ListShowtime(generics.ListCreateAPIView):
+    queryset = Showtime.objects.all()
+    serializer_class = ShowtimeSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class DetailShowtime(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Showtime.objects.all()
+    serializer_class = ShowtimeSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+class ListGenre(generics.ListCreateAPIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+
+class DetailGenre(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+
+
+class ListRoomsFormat(generics.ListCreateAPIView):
+    serializer_class = RoomFormatSerializer
+    permission_classes = [IsAdminOrReadOnly, ]
+    queryset = RoomFormat.objects.all()
+
+
+class DetailRoomsFormat(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = RoomFormatSerializer
+    permission_classes = [IsAdminOrReadOnly, ]
+    queryset = RoomFormat.objects.all()
+
+
+class ListMovieFormat(generics.ListCreateAPIView):
+    serializer_class = MovieFormatSerializer
+    permission_classes = [IsAdminOrReadOnly, ]
+    queryset = MovieFormat.objects.all()
+
+
+class DetailMovieFormat(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = MovieFormatSerializer
+    permission_classes = [IsAdminOrReadOnly, ]
+    queryset = MovieFormat.objects.all()

@@ -5,32 +5,54 @@ from movies.models import (
     Movie,
     Cinema,
     Showtime,
+    Seat
 )
 from users.models import User
 
 
-class Room(models.Model):
-    name = models.CharField(max_length=255)
-    cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE, related_name='rooms')
-    seats_available = models.IntegerField()
 
-class Seat(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='seats')
-    row = models.CharField(max_length=10)
-    number = models.CharField(max_length=10)
-    is_available = models.BooleanField(default=True)
+
+class TicketType(models.Model):
+    name = models.CharField(max_length=255)
+    price = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 class Ticket(models.Model):
     showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, related_name='tickets')
     seat = models.ForeignKey(Seat, on_delete=models.CASCADE, related_name='tickets')
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    ticket_type = models.CharField(max_length=255)
+    price = models.IntegerField(blank=True, null=True)
     customer = models.ForeignKey('User', on_delete=models.CASCADE, related_name='tickets')
     purchase_date = models.DateTimeField(auto_now_add=True)
+    
+    methods = [
+        (1, 'Visa-card'),
+        (2, 'Klarna'),
+        (3, 'MasterCard'),
+    ]
+    
+    def save(self, *args, **kwargs):
+        if (
+                self.ticket_type.name == "adult" or
+                self.ticket_type.name == "child" or
+                self.ticket_type.name == "student" and
+                self.seats.rooms.format.name == 'small' or
+                self.seats.rooms.format.name == 'middle' or
+                self.seats.rooms.format.name == 'big' or
+                self.seats.rooms.format.name == 'Imax'
+        ):
+            self.price = self.ticket_type.price + \
+                         self.seats.rooms.format.price
+        super().save(*args, **kwargs)
+
 
 class PurchaseHistory(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='purchase_history')
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='purchase_history')
     showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, related_name='purchase_history')
+    ticket_type = models.CharField(max_length=255)
     purchase_date = models.DateTimeField(auto_now_add=True)
     amount_spent = models.DecimalField(max_digits=10, decimal_places=2)
 
