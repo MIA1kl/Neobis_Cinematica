@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from movies.models import (
     Movie,
@@ -6,9 +7,6 @@ from movies.models import (
     Seat
 )
 from users.models import User
-
-
-
 
 class TicketType(models.Model):
     name = models.CharField(max_length=255)
@@ -23,13 +21,17 @@ class Booking(models.Model):
     seats = models.ManyToManyField(Seat)
     payment_method = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
+    total_price = models.IntegerField(blank=True, null=True)
+    
+def generate_ticket_id():
+    return str(uuid.uuid4()).split("-")[-1] 
 
 class Ticket(models.Model):
     showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, related_name='tickets')
     seat = models.ForeignKey(Seat, on_delete=models.CASCADE, related_name='tickets')
     ticket_type = models.CharField(max_length=255)
     price = models.IntegerField(blank=True, null=True)
-    customer = models.ForeignKey('User', on_delete=models.CASCADE, related_name='tickets')
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
     purchase_date = models.DateTimeField(auto_now_add=True)
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     
@@ -40,6 +42,8 @@ class Ticket(models.Model):
     ]
     
     def save(self, *args, **kwargs):
+        if len(self.ticket_id.strip(" "))==0:
+            self.ticket_id = generate_ticket_id()
         if (
                 self.ticket_type.name == "adult" or
                 self.ticket_type.name == "child" or
@@ -50,7 +54,7 @@ class Ticket(models.Model):
         ):
             self.price = self.ticket_type.price + \
                          self.seats.rooms.format.price
-        super().save(*args, **kwargs)
+        super(Ticket, self).save(*args, **kwargs)
         
 
 class PurchaseHistory(models.Model):
