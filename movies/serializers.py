@@ -21,16 +21,16 @@ class MovieSerializer(serializers.ModelSerializer):
 
 
 class CinemaSerializer(serializers.ModelSerializer):
-    movies = serializers.SerializerMethodField()
+    # movies = serializers.SerializerMethodField()
 
     class Meta:
         model = Cinema
         fields = '__all__'
 
-    def get_movies(self, obj):
-        showtimes = Showtime.objects.filter(cinema=obj)
-        movie_serializer = MovieSerializer(showtimes.values('movie'), many=True)
-        return movie_serializer.data
+    # def get_movies(self, obj):
+    #     showtimes = Showtime.objects.filter(cinema=obj)
+    #     movie_serializer = MovieSerializer()
+    #     return movie_serializer.data
 
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,14 +44,15 @@ class RoomFormatSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class SeatSerializer(serializers.ModelSerializer):
+    is_available = serializers.ReadOnlyField()
     class Meta:
         model = Seat
         fields = '__all__'
 
 class ShowtimeSerializer(serializers.ModelSerializer):
     tickets = TicketSerializer(many=True)
-    movie = MovieSerializer()
     cinema = CinemaSerializer()
+    movie = MovieSerializer()
 
     class Meta:
         model = Showtime

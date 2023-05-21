@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import timedelta
+from datetime import timedelta, timezone
 
 
 class Genre(models.Model):
@@ -25,7 +25,6 @@ class Movie(models.Model):
 class Cinema(models.Model):
     name = models.CharField(max_length=255)
     address = models.TextField()
-    contact = models.CharField(max_length=255)
     schedule = models.CharField(max_length=255)
     contacts = models.CharField(max_length=255, blank=True, null=True)
     movies = models.ManyToManyField(Movie, through='Showtime')
@@ -52,8 +51,8 @@ class Seat(models.Model):
     is_available = models.BooleanField(default=True)
     
 class Showtime(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='showtimes')
-    cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE, related_name='showtimes')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='movie')
+    cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE, related_name='cinema')
     start_time = models.DateTimeField()
     
     def __str__(self):
