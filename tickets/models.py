@@ -4,7 +4,9 @@ from movies.models import (
     Movie,
     Cinema,
     Showtime,
-    Seat
+    Seat,
+    SeatFormat, 
+    RoomFormat
 )
 from users.models import User
 
@@ -23,8 +25,11 @@ class Discount(models.Model):
 class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE)
+    ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE, null=True)
+    seat_format = models.ForeignKey(SeatFormat, on_delete=models.CASCADE,null=True)
+    room_format = models.ForeignKey(RoomFormat, on_delete=models.CASCADE, null=True)
     seats = models.ManyToManyField(Seat)
-    payment_method = models.CharField(max_length=100)
+    # payment_method = models.ForeignKey(Discount, on_delete=models.SET_NULL, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     total_price = models.IntegerField(blank=True, null=True)
     discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, blank=True, null=True)
@@ -42,8 +47,8 @@ class Ticket(models.Model):
         
     showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, related_name='tickets')
     seat = models.ForeignKey(Seat, on_delete=models.CASCADE, related_name='tickets')
-    ticket_type = models.CharField(max_length=255)
-    price = models.IntegerField(blank=True, null=True)
+    ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE, related_name='tickets')
+    # price = models.IntegerField(blank=True, null=True)
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
     payment_method = models.CharField(max_length=100, choices=methods, default=methods[1])
     purchase_date = models.DateTimeField(auto_now_add=True)

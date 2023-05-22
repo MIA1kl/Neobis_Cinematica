@@ -1,5 +1,6 @@
 
 from rest_framework import generics
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -25,6 +26,9 @@ from movies.models import Seat
 
 
 class ListBooking(generics.ListCreateAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+
     def perform_create(self, serializer):
         booking = serializer.save(user=self.request.user)
         showtime = booking.showtime
@@ -38,6 +42,7 @@ class ListBooking(generics.ListCreateAPIView):
 
         # Update seat status as booked
         Seat.objects.filter(id__in=[seat.id for seat in seats]).update(is_available=False)
+
 
 
 class DetailBooking(generics.RetrieveUpdateDestroyAPIView):
@@ -83,7 +88,7 @@ class DetailTicket(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ticket.objects.all()
 
 
-class ListPurchaseHistory(generics.ReadOnlyModelViewSet):
+class ListPurchaseHistory(generics.RetrieveUpdateDestroyAPIView):
     queryset = PurchaseHistory.objects.all()
     serializer_class = PurchaseHistorySerializer
     

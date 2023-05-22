@@ -32,12 +32,21 @@ class Cinema(models.Model):
     def __str__(self):
         return self.name
 
+class RoomFormat(models.Model):
+    name = models.CharField(max_length=255)
+    price = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
 class Room(models.Model):
     name = models.CharField(max_length=255)
     cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE, related_name='rooms')
     seats_available = models.IntegerField()
+    room_format = models.ForeignKey(RoomFormat, on_delete=models.SET_NULL, null=True)
     
-class RoomFormat(models.Model):
+    
+class SeatFormat(models.Model):
     name = models.CharField(max_length=255)
     price = models.IntegerField(blank=True, null=True)
 
@@ -47,8 +56,8 @@ class RoomFormat(models.Model):
 class Seat(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='seats')
     row = models.CharField(max_length=10)
-    number = models.CharField(max_length=10)
     is_available = models.BooleanField(default=True)
+    seat_number = models.ForeignKey(SeatFormat, on_delete=models.SET_NULL, null=True)
     
 class Showtime(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='movie')

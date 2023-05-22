@@ -1,6 +1,6 @@
 from rest_framework import viewsets, generics, permissions
-from .models import Movie, Cinema, Genre, Room, RoomFormat, Seat, Showtime
-from .serializers import MovieSerializer, CinemaSerializer, GenreSerializer, RoomSerializer, RoomFormatSerializer, SeatSerializer, ShowtimeSerializer
+from .models import Movie, Cinema, Genre, Room, RoomFormat, Seat, Showtime, SeatFormat
+from .serializers import MovieSerializer, CinemaSerializer, GenreSerializer, RoomSerializer, RoomFormatSerializer, SeatSerializer, ShowtimeSerializer,SeatFormatSerializer
 from django.utils import timezone
 from users.permissions import IsAdminOrReadOnly
 
@@ -74,6 +74,17 @@ class ListRoomsFormat(generics.ListCreateAPIView):
 
 
 class DetailRoomsFormat(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = RoomFormatSerializer
+    permission_classes = [IsAdminOrReadOnly, ]
+    queryset = RoomFormat.objects.all()
+
+class ListSeatFormat(generics.ListCreateAPIView):
+    serializer_class = RoomFormatSerializer
+    permission_classes = [IsAdminOrReadOnly, ]
+    queryset = RoomFormat.objects.all()
+
+
+class DetailSeatFormat(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = RoomFormatSerializer
     permission_classes = [IsAdminOrReadOnly, ]
     queryset = RoomFormat.objects.all()

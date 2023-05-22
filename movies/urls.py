@@ -13,7 +13,9 @@ from .views import (
     ListSeat,
     DetailSeat,
     ListShowtime,
-    DetailShowtime
+    DetailShowtime, 
+    ListSeatFormat,
+    DetailSeatFormat
 )
 
 app_name = 'movies'
@@ -36,6 +38,9 @@ urlpatterns = [
     
     path('seats/', ListSeat.as_view(), name='seat-list'),
     path('seats/<int:pk>/', DetailSeat.as_view(), name='seat-detail'),
+    
+    path('seats-format/', ListSeatFormat.as_view(), name='seat-format-list'),
+    path('seats-format/<int:pk>/', DetailSeatFormat.as_view(), name='seat-format-detail'),
     
     path('showtimes/', ListShowtime.as_view(), name='showtime-list'),
     path('showtimes/<int:pk>/', DetailShowtime.as_view(), name='showtime-detail'),    

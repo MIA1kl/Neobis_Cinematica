@@ -21,17 +21,19 @@ class DiscountSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class BookingSerializer(serializers.ModelSerializer):
-    discount = DiscountSerializer(required=False, allow_null=True)
+    discount = DiscountSerializer(required=False, allow_null=True, read_only=True)
+    total_price = serializers.SerializerMethodField('calculate_total_price')
 
     class Meta:
         model = Booking
-        fields = ['id', 'user', 'showtime', 'seats', 'payment_method', 'created_at', 'total_price', 'discount']
-        read_only_fields = ['total_price']
+        fields = ['id', 'user', 'showtime', 'seats', 'created_at', 'total_price', 'discount']
+        read_only_fields = ['total_price', 'discount']
+    
 
     def create(self, validated_data):
         discount_data = validated_data.pop('discount', None)
         seats = validated_data.get('seats')
-        showtime = validated_data.get('showtime')\
+        showtime = validated_data.get('showtime')
             
         discount = None
         if discount_data:
@@ -40,7 +42,7 @@ class BookingSerializer(serializers.ModelSerializer):
             discount = discount_serializer.save()
 
         total_price = BookingSerializer.calculate_total_price(seats, discount)
-        booking = Booking.objects.create(total_price=total_price, **validated_data)
+        booking = Booking.objects.create(total_price=total_price, showtime=showtime)
         booking.seats.set(seats)
 
         return booking
