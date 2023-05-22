@@ -28,14 +28,11 @@ class Booking(models.Model):
     ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE, null=True)
     room_format = models.ForeignKey(RoomFormat, on_delete=models.CASCADE, null=True)
     seat_number = models.ForeignKey(SeatFormat, on_delete=models.CASCADE,null=True)
-    seats = models.ManyToManyField(Seat)
+    # seats = models.ManyToManyField(Seat)
     created_at = models.DateTimeField(auto_now_add=True)
     total_price = models.IntegerField(blank=True, null=True)
     discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, blank=True, null=True)
 
-    
-def generate_ticket_id():
-    return str(uuid.uuid4()).split("-")[-1] 
 
 class Ticket(models.Model):
     methods = [
@@ -44,22 +41,24 @@ class Ticket(models.Model):
         (3, 'MasterCard'),
     ]
         
-    showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, related_name='tickets')
-    seat = models.ForeignKey(Seat, on_delete=models.CASCADE, related_name='tickets')
-    ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE, related_name='tickets')
+    # showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, related_name='tickets')
+    # seat = models.ForeignKey(Seat, on_delete=models.CASCADE, related_name='tickets')
+    # ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE, related_name='tickets')
     # price = models.IntegerField(blank=True, null=True)
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
     payment_method = models.CharField(max_length=100, choices=methods, default=methods[1])
     purchase_date = models.DateTimeField(auto_now_add=True)
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, related_name='booking_items')
     
 
     
-    def save(self, *args, **kwargs):
-        if len(self.ticket_id.strip(" "))==0:
-            self.ticket_id = generate_ticket_id()
-        self.price = self.ticket_type.price + self.seat.room.room_format.price
-        super(Ticket, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # if len(self.ticket_id.strip(" "))==0:
+    #     #     self.ticket_id = generate_ticket_id()
+    #     self.price = self.ticket_type.price + self.seat.room.room_format.price
+    #     super(Ticket, self).save(*args, **kwargs)
+    # def generate_ticket_id():
+    # return str(uuid.uuid4()).split("-")[-1] 
         
 
 class PurchaseHistory(models.Model):
@@ -72,6 +71,7 @@ class PurchaseHistory(models.Model):
 
 class Feedback(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='feedback')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='feedback', null=True)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
