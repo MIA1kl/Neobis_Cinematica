@@ -40,15 +40,12 @@ class Ticket(models.Model):
         (2, 'Klarna'),
         (3, 'MasterCard'),
     ]
-        
-    # showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, related_name='tickets')
-    # seat = models.ForeignKey(Seat, on_delete=models.CASCADE, related_name='tickets')
-    # ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE, related_name='tickets')
+
     # price = models.IntegerField(blank=True, null=True)
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
     payment_method = models.CharField(max_length=100, choices=methods, default=methods[1])
     purchase_date = models.DateTimeField(auto_now_add=True)
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, related_name='booking_items')
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, related_name='bookings')
     
 
     
@@ -57,8 +54,8 @@ class Ticket(models.Model):
     #     #     self.ticket_id = generate_ticket_id()
     #     self.price = self.ticket_type.price + self.seat.room.room_format.price
     #     super(Ticket, self).save(*args, **kwargs)
-    # def generate_ticket_id():
-    # return str(uuid.uuid4()).split("-")[-1] 
+    def __str__(self):
+        return f"User: {self.booking.user} - Booking: {self.booking.showtime} - Room: {self.booking.room_format} - Seat: {self.payment_method}"
         
 
 class PurchaseHistory(models.Model):

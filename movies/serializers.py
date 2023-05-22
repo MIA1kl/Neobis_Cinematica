@@ -55,7 +55,6 @@ class SeatSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ShowtimeSerializer(serializers.ModelSerializer):
-    tickets = TicketSerializer(many=True)
     cinema = CinemaSerializer()
     movie = MovieSerializer()
 
