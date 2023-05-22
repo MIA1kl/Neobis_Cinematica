@@ -48,8 +48,6 @@ class Room(models.Model):
     
 class SeatFormat(models.Model):
     name = models.CharField(max_length=255)
-    price = models.IntegerField(blank=True, null=True)
-
     def __str__(self):
         return self.name
 

@@ -26,10 +26,9 @@ class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE)
     ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE, null=True)
-    seat_format = models.ForeignKey(SeatFormat, on_delete=models.CASCADE,null=True)
     room_format = models.ForeignKey(RoomFormat, on_delete=models.CASCADE, null=True)
+    seat_number = models.ForeignKey(SeatFormat, on_delete=models.CASCADE,null=True)
     seats = models.ManyToManyField(Seat)
-    # payment_method = models.ForeignKey(Discount, on_delete=models.SET_NULL, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     total_price = models.IntegerField(blank=True, null=True)
     discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, blank=True, null=True)
@@ -59,16 +58,7 @@ class Ticket(models.Model):
     def save(self, *args, **kwargs):
         if len(self.ticket_id.strip(" "))==0:
             self.ticket_id = generate_ticket_id()
-        if (
-                self.ticket_type.name == "adult" or
-                self.ticket_type.name == "child" or
-                self.ticket_type.name == "student" and
-                self.seat.room.format.name == 'small' or
-                self.seat.room.format.name == 'middle' or
-                self.seat.room.format.name == 'big' 
-        ):
-            self.price = self.ticket_type.price + \
-                         self.seats.rooms.format.price
+        self.price = self.ticket_type.price + self.seat.room.room_format.price
         super(Ticket, self).save(*args, **kwargs)
         
 

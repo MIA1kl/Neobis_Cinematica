@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import  TicketType, Ticket, PurchaseHistory, Feedback, Discount, Booking
+from movies.models import SeatFormat, RoomFormat
 
 
 
@@ -26,7 +27,7 @@ class BookingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ['id', 'user', 'showtime', 'seats', 'created_at', 'total_price', 'discount']
+        fields = '__all__'
         read_only_fields = ['total_price', 'discount']
     
 
@@ -47,23 +48,23 @@ class BookingSerializer(serializers.ModelSerializer):
 
         return booking
 
-    @staticmethod
+    
     def calculate_total_price(seats, discount=None):
         total_price = 0
         
-        for seat in seats:
-            seat_price = 0 
-            seat_type = seat.seat_type
+        # for seat in seats:
+        #     seat_price = 0 
+        #     seat_format = seat.seat_type
 
-            if seat_type == 'adult':
-                seat_price = 10
-            elif seat_type == 'child':
-                seat_price = 5
-            elif seat_type == 'student':
-                seat_price = 7
+        #     if seat_type == 'adult':
+        #         seat_price = 10
+        #     elif seat_type == 'child':
+        #         seat_price = 5
+        #     elif seat_type == 'student':
+        #         seat_price = 7
 
 
-            total_price += seat_price
+            # total_price += seat_price
             
         if discount:
             discount_percentage = discount.percentage
