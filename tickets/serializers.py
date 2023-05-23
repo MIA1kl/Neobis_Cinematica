@@ -1,13 +1,8 @@
 from rest_framework import serializers
-from .models import  TicketType, Ticket, PurchaseHistory, Feedback, Discount, Booking
-from movies.models import SeatFormat, RoomFormat
+from .models import Ticket, PurchaseHistory, Feedback, Discount, Booking
+from movies.models import Seat, Room
 
 
-
-class TicketTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TicketType
-        fields = '__all__'
 
 class DiscountSerializer(serializers.ModelSerializer):
     class Meta:

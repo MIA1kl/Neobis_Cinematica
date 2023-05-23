@@ -7,7 +7,6 @@ from rest_framework import status
 from users.models import User
 
 from .models import (
-    TicketType,
     Booking,
     Ticket,
     PurchaseHistory,
@@ -15,7 +14,6 @@ from .models import (
     Discount,
 )
 from .serializers import (
-    TicketTypeSerializer,
     BookingSerializer,
     TicketSerializer,
     PurchaseHistorySerializer,
@@ -28,22 +26,14 @@ from movies.models import Seat
 
 class ListBooking(generics.ListCreateAPIView):
     serializer_class = BookingSerializer
-    queryset = TicketType.objects.all()
+    queryset = Booking.objects.all()
 
 
 
 class DetailBooking(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BookingSerializer
-    queryset = TicketType.objects.all()
+    queryset = Booking.objects.all()
 
-class ListTicketType(generics.ListCreateAPIView):
-    serializer_class = TicketTypeSerializer
-    queryset = TicketType.objects.all()
-
-
-class DetailTicketType(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = TicketTypeSerializer
-    queryset = TicketType.objects.all()
     
 class ListTicket(generics.ListCreateAPIView):
     serializer_class = TicketSerializer

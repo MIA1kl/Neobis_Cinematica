@@ -10,8 +10,6 @@ from .views import (
     ListPurchaseHistory,
     ListTicket,
     DetailTicket,
-    ListTicketType,
-    DetailTicketType,
 )
 
 app_name = 'tickets'
@@ -28,9 +26,6 @@ urlpatterns = [
     
     path('tickets/', ListTicket.as_view(), name='ticket-list'),
     path('tickets/<int:pk>/', DetailTicket.as_view(), name='ticket-detail'),
-    
-    path('ticket-types/', ListTicketType.as_view(), name='ticket-type-list'),
-    path('ticket-types/<int:pk>/', DetailTicketType.as_view(), name='ticket-type-detail'),
     
     path('history/', ListPurchaseHistory.as_view(), name='history-list'),  
 ]
