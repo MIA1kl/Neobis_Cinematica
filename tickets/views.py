@@ -12,6 +12,7 @@ from .models import (
     PurchaseHistory,
     Feedback,
     Discount,
+    OrderItem
 )
 from .serializers import (
     BookingSerializer,
@@ -19,6 +20,7 @@ from .serializers import (
     PurchaseHistorySerializer,
     FeedbackSerializer,
     DiscountSerializer,
+    OrderItemSerializer
 )
 
 from movies.models import Seat
@@ -65,3 +67,8 @@ class ListDiscount(generics.ListCreateAPIView):
 class DetailDiscount(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DiscountSerializer
     queryset = Discount.objects.all()
+    
+class OrderItemCreateAPIView(generics.ListCreateAPIView):
+
+    queryset = OrderItem.objects.all()
+    serializers_class = OrderItemSerializer

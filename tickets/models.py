@@ -28,7 +28,6 @@ class Booking(models.Model):
     room_format = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
     seat_number = models.ForeignKey(Seat, on_delete=models.CASCADE,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    total_price = models.IntegerField(blank=True, null=True)
     discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, blank=True, null=True)
 
 
@@ -42,10 +41,20 @@ class Ticket(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
     payment_method = models.CharField(max_length=100, choices=methods, default=methods[1])
     purchase_date = models.DateTimeField(auto_now_add=True)
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, related_name='bookings')
+    # booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, related_name='bookings')
     
     def __str__(self):
         return f"User: {self.booking.user} - Booking: {self.booking.showtime} - Room: {self.booking.room_format} - Seat: {self.payment_method}"
+    
+
+class OrderItem(models.Model):
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, null=True, related_name='order_tickets')
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, related_name='order_bookings')
+    quantity = models.PositiveSmallIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.ticket.customer} books - {self.booking.showtime}"
+    
         
 
 class PurchaseHistory(models.Model):
