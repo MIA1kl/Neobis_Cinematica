@@ -47,7 +47,7 @@ class DetailTicket(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ticket.objects.all()
 
 
-class ListPurchaseHistory(generics.RetrieveUpdateDestroyAPIView):
+class ListPurchaseHistory(generics.ListCreateAPIView):
     queryset = PurchaseHistory.objects.all()
     serializer_class = PurchaseHistorySerializer
     

@@ -41,10 +41,6 @@ class Ticket(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
     payment_method = models.CharField(max_length=100, choices=methods, default=methods[1])
     purchase_date = models.DateTimeField(auto_now_add=True)
-    # booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, related_name='bookings')
-    
-    def __str__(self):
-        return f"User: {self.booking.user} - Booking: {self.booking.showtime} - Room: {self.booking.room_format} - Seat: {self.payment_method}"
     
 
 class OrderItem(models.Model):
@@ -59,7 +55,7 @@ class OrderItem(models.Model):
 
 class PurchaseHistory(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='purchase_history')
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='purchase_history')
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name='purchase_history')
     showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, related_name='purchase_history')
     purchase_date = models.DateTimeField(auto_now_add=True)
     amount_spent = models.DecimalField(max_digits=10, decimal_places=2)

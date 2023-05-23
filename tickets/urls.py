@@ -29,5 +29,6 @@ urlpatterns = [
     path('tickets/<int:pk>/', DetailTicket.as_view(), name='ticket-detail'),
     
     path('history/', ListPurchaseHistory.as_view(), name='history-list'),  
+    
     path('order-item/', OrderItemCreateAPIView.as_view(), name='order-item'),
 ]
