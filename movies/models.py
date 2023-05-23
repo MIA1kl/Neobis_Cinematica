@@ -43,7 +43,6 @@ class Room(models.Model):
       (2, 'medium'),
       (3, 'big'),
       )
-    name = models.CharField(max_length=255)
     cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE, related_name='rooms')
     seats_available = models.IntegerField()
     room_format = models.CharField(max_length=100, choices=choices_room, default=choices_room[1])
